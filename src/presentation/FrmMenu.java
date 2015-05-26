@@ -2,11 +2,15 @@ package presentation;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+
+import presentation.*;
 
 
 
@@ -17,8 +21,8 @@ public class FrmMenu extends JFrame  implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JMenuBar mb;
-	 private JMenu mClientes, mPqtTuristico, mAviones;
-	 private JMenuItem jmListadoClientes, jmAltaPaquetes, jmSalir, jmAltaClientes, jmListadoAviones;
+	 private JMenu mClientes, mPqtTuristico, mMigrar, mAviones;
+	 private JMenuItem jmListadoClientes, jmAltaPaquetes, jmSalir, jmAltaClientes, jmListadoAviones, jmMigrarClientes, jmMigrarPaquetes;
 	    
 	   	
 	    public FrmMenu() {
@@ -41,12 +45,12 @@ public class FrmMenu extends JFrame  implements ActionListener {
 	        mClientes.add(jmAltaClientes);
 	        jmAltaClientes.addActionListener(this);
 	        
-	        /*mAviones=new JMenu("Aviones");
+	        mAviones=new JMenu("Aviones");
 	        mb.add(mAviones);
 	        
 	        jmListadoAviones=new JMenuItem("Listado de aviones");
 	        mAviones.add(jmListadoAviones);
-	        jmListadoAviones.addActionListener(this);*/
+	        jmListadoAviones.addActionListener(this);
 	        
 	        mPqtTuristico=new JMenu("Paquetes");
 	        mb.add(mPqtTuristico);
@@ -55,6 +59,19 @@ public class FrmMenu extends JFrame  implements ActionListener {
 	        mPqtTuristico.add(jmAltaPaquetes);
 	        jmAltaPaquetes.addActionListener(this);
 	        
+	        
+	        mMigrar=new JMenu("Migrar");
+	        mb.add(mMigrar);
+	        
+	        
+	        
+	        jmMigrarClientes = new JMenuItem("Migrar Clientes");
+	        mMigrar.add(jmMigrarClientes);
+	        jmMigrarClientes.addActionListener(this);
+	        
+	        jmMigrarPaquetes = new JMenuItem("Migrar Paquetes");
+	        mMigrar.add(jmMigrarPaquetes);
+	        jmMigrarPaquetes.addActionListener(this);
 	        
 	        
 	        jmSalir=new JMenuItem("Salir");
@@ -86,6 +103,34 @@ public class FrmMenu extends JFrame  implements ActionListener {
 					//AgregarPaquete.setVisible(true);
 					FrmAgregarPaquete FormAddPackage = new FrmAgregarPaquete();
 					FormAddPackage.setVisible(true);
+				}
+			});
+	        
+	        jmListadoAviones.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					//Menu.setVisible(false);
+					//ListadoClientes.setVisible(true);
+					FrmListadoAviones FormAviones = null;
+					try {
+						FormAviones = new FrmListadoAviones();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					FormAviones.setVisible(true);
+				}
+			});
+	        jmMigrarClientes.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Thread t = new Thread(new FrmMigrarClientes());
+					t.start();
+				}
+			});
+	        
+	        jmMigrarPaquetes.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Thread t = new Thread(new FrmMigrarPaquetes());
+					t.start();
 				}
 			});
 	        

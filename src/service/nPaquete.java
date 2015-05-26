@@ -1,14 +1,22 @@
 package service;
 
 import java.io.*;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
 
 import model.*;
 
 public class nPaquete {
-
+	private String user = "root";
+	private String pass = "";
+	private String host = "jdbc:mysql://localhost:3306/";
+	private String dbName = "grupo_6_db";
 	public boolean grabarPaquete(Paquete paq) throws IOException
 	{
 		try{
@@ -141,6 +149,104 @@ public class nPaquete {
 			}
 			
 		}
+	}
+	public boolean GrabarEnBase(Paquete paquete)
+	{
+		String parametros;
+		
+		
+		parametros = paquete.getIdPaquete()+", '"+ paquete.getNombre()+"', '"+ paquete.getOrigen()+"', '"+ paquete.getDestino()+"', " + paquete.getPrecio(); 
+		
+		try{
+			
+			Connection conn = null;
+			
+			conn = (Connection) DriverManager.getConnection(host + dbName, user,pass );
+			Statement st = (Statement) conn.createStatement();
+			
+			st.executeUpdate("INSERT INTO PAQUETE(ID_PAQUETE,NOMBRE,DESDE,HACIA,PRECIO) VALUES("+ parametros + ")");
+			
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			
+		}
+		finally
+		{
+			
+			
+		}
+		
+		return true;
+		
+	}
+	
+	
+	public List<Paquete> ListaBase() {
+		String query = "SELECT ID_PAQUETE,PRECIO,DESDE,HACIA,NOMBRE FROM PAQUETE";
+		List<Paquete> paquetes = new ArrayList<Paquete>();
+		Connection conn = null;
+		Statement st = null;
+
+		try {
+
+			conn = (Connection) DriverManager.getConnection(host + dbName,
+					user, pass);
+			st = (Statement) conn.createStatement();
+
+			ResultSet rs = st.executeQuery(query);
+
+			while (rs.next()) {
+				Paquete p = new Paquete();
+			
+				p.setDestino(rs.getString("HACIA"));
+				p.setOrigen(rs.getString("DESDE"));
+				p.setNombre(rs.getString("NOMBRE"));
+				p.setPrecio(rs.getFloat("PRECIO"));
+				p.setIdPaquete(rs.getInt("ID_PAQUETE"));
+				paquetes.add(p);
+
+			}
+
+		} catch (Exception e) {
+
+		} finally {
+			if(conn != null)
+			{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return paquetes;
+
+	}
+	
+	
+	public List<Paquete> listaParaMigrar() {
+
+		List<Paquete> archivo = listaPaquete();
+		List<Paquete> base = ListaBase();
+		
+		for(Paquete a : archivo)
+		{
+			for(Paquete b : base)
+			{
+				if(a.getIdPaquete() == b.getIdPaquete())
+				{
+					archivo.remove(a);
+					break;
+				}
+				
+			}
+		}
+		
+		return archivo;
+		
 	}
 	
 }

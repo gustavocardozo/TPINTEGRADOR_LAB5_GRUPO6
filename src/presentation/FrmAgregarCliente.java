@@ -216,14 +216,14 @@ public class FrmAgregarCliente extends JFrame {
 						cliente.setFechaNac(fecha);
 						cliente.setNombre(textNombre.getText());
 		
-						if(negocio.grabarCliente(cliente))
+						if(negocio.GrabarEnBase(cliente))
 						{
 							JOptionPane.showMessageDialog(FrmAgregarCliente.this, "Se agrego correctamente");
 							FrmAgregarCliente.this.dispose();
 						}
 					
 					}
-				} catch ( ParseException | HeadlessException | IOException e1) {
+				} catch ( ParseException | HeadlessException  e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}

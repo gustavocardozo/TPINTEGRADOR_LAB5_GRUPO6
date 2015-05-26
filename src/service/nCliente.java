@@ -6,15 +6,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 
 
+
+
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
 import model.*;
 
 public class nCliente {
-
+	private String user = "root";
+	private String pass = "";
+	private String host = "jdbc:mysql://localhost:3306/";
+	private String dbName = "grupo_6_db";
 	public boolean grabarCliente(Cliente clie) throws IOException
 	{
 		ObjectOutputStream oos = null;
@@ -167,6 +180,92 @@ public class nCliente {
 		}
 	}
 	
+	public boolean GrabarEnBase(Cliente cliente)
+	{
+		String parametros;
+		Connection conn = null;
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+		parametros = "null,'"+cliente.getDireccion()+"', '"+cliente.getEmail()+"', '"+cliente.getTelefono()+"','"+cliente.getDni()+"','"+cliente.getNombre()+"','"+cliente.getApellido()+"','"+ sdf.format(cliente.getFechaNac())+"'"; 
+		
+		try{
+			
+			
+			
+			conn = (Connection) DriverManager.getConnection(host + dbName, user,pass );
+			Statement st = (Statement) conn.createStatement();
+			
+			st.executeUpdate("INSERT INTO CLIENTE(ID_CLIENTE,DIRECCION,EMAIL,TELEFONO,DNI,NOMBRE,APELLIDO,FEC_NACIMIENTO) VALUES("+ parametros + ")");
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		finally
+		{
+			if(conn != null)
+			{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		}
+		
+		return true;
+		
+	}
+	public List<Cliente> ListaBase() 
+	{
+		String query;
+		
+		query = "SELECT * FROM CLIENTE";
+		
+		List<Cliente> clientes = new ArrayList<>();
+		Connection conn= null;
+		Statement st = null;
+		
+		try{			
+			conn= (Connection) DriverManager.getConnection(host+dbName,user,pass);
+			st = (Statement) conn.createStatement();
+			
+			ResultSet rs = st.executeQuery(query);
+			
+			while (rs.next())
+			{
+				Cliente clie = new Cliente();
+				
+				clie.setId(rs.getInt("ID_CLIENTE"));
+				clie.setDni(rs.getString("DNI"));
+				clie.setNombre(rs.getString("NOMBRE"));
+				clie.setApellido(rs.getString("APELLIDO"));
+				clie.setDireccion(rs.getString("DIRECCION"));
+				clie.setEmail(rs.getString("EMAIL"));
+				clie.setFechaNac(rs.getDate("FEC_NACIMIENTO"));
+				clie.setTelefono(rs.getString("TELEFONO"));
+				
+				clientes.add(clie);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return clientes;
+	}
 	
 	
 }

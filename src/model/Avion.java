@@ -4,15 +4,7 @@ public class Avion {
 	protected Integer Id;
 	protected String Nombre;
 	protected Integer Capacidad;
-	protected String Marca;
 	
-	
-	public String getMarca() {
-		return Marca;
-	}
-	public void setMarca(String marca) {
-		Marca = marca;
-	}
 	public Integer getId() {
 		return Id;
 	}
