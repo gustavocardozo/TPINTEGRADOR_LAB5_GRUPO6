@@ -5,9 +5,14 @@ import java.sql.SQLException;
 
 import javax.swing.SwingUtilities;
 
+import model.*;
+
 public class Programa {
 	public static void main(String[] args) throws SQLException, IOException{
 		
+		Thread t = new Thread(new Server());
+		
+		t.start();
 		Runnable inicializador = new Runnable() {
 			
 			@Override

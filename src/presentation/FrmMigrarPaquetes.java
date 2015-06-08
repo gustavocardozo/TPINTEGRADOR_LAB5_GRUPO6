@@ -45,7 +45,7 @@ public class FrmMigrarPaquetes extends JFrame implements Runnable {
 		int proceso=0;
 		List<Paquete> paquetes = new ArrayList<>();
 		
-		paquetes = nP.listaPaquete();
+		paquetes = nP.listaParaMigrar();
 
 		
 		cantidad.setText(String.valueOf(paquetes.size()));

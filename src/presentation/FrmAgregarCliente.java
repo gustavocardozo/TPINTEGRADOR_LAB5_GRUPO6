@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+
 import javax.swing.*;
 
 import model.*;
@@ -18,7 +20,16 @@ import service.*;
 
 public class FrmAgregarCliente extends JFrame {
 	private JPanel panel;
-	
+	public static boolean isFechaValida(String fecha) {
+        try {
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            formatoFecha.setLenient(false);
+            formatoFecha.parse(fecha);
+        } catch (ParseException e) {
+            return false;
+        }
+        return true;
+    }
 	public FrmAgregarCliente(){
 		
 		//Pantalla
@@ -123,7 +134,7 @@ public class FrmAgregarCliente extends JFrame {
 		panel.add(lblFechaNacBarra2);
 		
 		final JTextField textFechaAnio = new JTextField();
-		textFechaAnio.setBounds(300, 120,30,20);
+		textFechaAnio.setBounds(300, 120,35,20);
 		textFechaAnio.addKeyListener(new KeyAdapter()
 		{
 		   public void keyTyped(KeyEvent e)
@@ -297,6 +308,8 @@ public class FrmAgregarCliente extends JFrame {
 				}else if (!(textFechaDia.getText().trim().length() <= 2)){
 					errores.add("Maximo de 2 caracteres para el dia de nacimiento");
 				}
+				if(!isFechaValida(textFechaDia.getText().trim()+"/"+textFechaMes.getText().trim()+"/"+textFechaAnio.getText().trim()))
+					errores.add("Ingrese una fecha válida");
 				
 				if(errores.size() > 0){
 					String msjError="";

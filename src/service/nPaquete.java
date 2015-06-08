@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.mysql.jdbc.Connection;
@@ -228,24 +229,34 @@ public class nPaquete {
 	
 	
 	public List<Paquete> listaParaMigrar() {
-
-		List<Paquete> archivo = listaPaquete();
-		List<Paquete> base = ListaBase();
-		
-		for(Paquete a : archivo)
-		{
-			for(Paquete b : base)
-			{
-				if(a.getIdPaquete() == b.getIdPaquete())
-				{
-					archivo.remove(a);
-					break;
+		List<Paquete> archivo = null;
+		List<Paquete> base = null;
+		try{
+			archivo = listaPaquete();
+			base = ListaBase();
+			
+			
+			//archivo.removeAll(base);
+			
+			Iterator<Paquete> itArchivo = archivo.iterator();
+			Iterator<Paquete> itBase = base.iterator();
+			while(itArchivo.hasNext()){
+				Paquete paqueteArchivo = (Paquete)itArchivo.next();
+				while(itBase.hasNext()){
+					Paquete paqueteBase = (Paquete)itBase.next();
+					if(paqueteArchivo.getIdPaquete() == paqueteBase.getIdPaquete())
+					{
+						itArchivo.remove();
+						break;
+					}
 				}
-				
 			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}finally{
+			return archivo;
 		}
-		
-		return archivo;
 		
 	}
 	
