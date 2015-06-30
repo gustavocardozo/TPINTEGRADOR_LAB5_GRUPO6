@@ -6,8 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import model.Cliente;
-import service.nCliente;
-import service.niCliente;
+import service.*;
 
 public class FrmListadoClientes extends JFrame {
 	/**
@@ -43,10 +42,7 @@ public class FrmListadoClientes extends JFrame {
 		};
 		List<Cliente> lista = new ArrayList<>();
 		nCliente negCli = new nCliente();
-		niCliente nC = new niCliente();
-//		lista = negCli.listaClientes();
-		lista = nC.Listado();
-		double id = nC.GetID();
+		lista = negCli.listaClientes();
 		
 		//columnas
 		modelo.addColumn("ID_CLIENTE");
